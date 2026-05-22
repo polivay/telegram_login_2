@@ -41,12 +41,37 @@
     </div>
     <div class="loading" id="loading">Выполняем вход...</div>
   </div>
+
   <script>
-    function onTelegramAuth(user) {
+    async function onTelegramAuth(user) {
       document.getElementById('loading').style.display = 'block';
       document.getElementById('telegram-login').style.display = 'none';
-      const params = new URLSearchParams(user);
-      window.location.href = 'https://si-game-e3jo6t.flutterflow.app/telegramCallback?' + params.toString();
+
+      try {
+        // Вызываем Edge Function напрямую
+        const response = await fetch(
+          'https://unsuoaqphxnutqqumzgy.supabase.co/functions/v1/telegram-auth',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ telegramData: user })
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.email && data.password) {
+          // Редиректим с credentials в URL
+          window.location.href = 
+            'https://si-game-e3jo6t.flutterflow.app/telegramCallback' +
+            '?email=' + encodeURIComponent(data.email) +
+            '&password=' + encodeURIComponent(data.password);
+        } else {
+          document.getElementById('loading').textContent = 'Ошибка входа. Попробуй ещё раз.';
+        }
+      } catch (e) {
+        document.getElementById('loading').textContent = 'Ошибка соединения.';
+      }
     }
   </script>
 </body>
