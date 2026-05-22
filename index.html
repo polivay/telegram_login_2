@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Войти в TERO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0a0a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: white;
+    }
+    .container { text-align: center; padding: 40px 20px; }
+    .logo { font-size: 64px; margin-bottom: 16px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    p { color: #888; margin-bottom: 32px; font-size: 15px; }
+    #telegram-login { display: flex; justify-content: center; }
+    .loading { display: none; color: #54A3FF; font-size: 14px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🐢</div>
+    <h1>TERO</h1>
+    <p>Социальная инвестиционная игра</p>
+    <div id="telegram-login">
+      <script
+        async
+        src="https://telegram.org/js/telegram-widget.js?22"
+        data-telegram-login="TeroGameAuthBot"
+        data-size="large"
+        data-radius="8"
+        data-onauth="onTelegramAuth(user)"
+        data-request-access="write">
+      </script>
+    </div>
+    <div class="loading" id="loading">Выполняем вход...</div>
+  </div>
+  <script>
+    function onTelegramAuth(user) {
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('telegram-login').style.display = 'none';
+      const params = new URLSearchParams(user);
+      window.location.href = 'https://si-game-e3jo6t.flutterflow.app/TelegramCallback?' + params.toString();
+    }
+  </script>
+</body>
+</html>
